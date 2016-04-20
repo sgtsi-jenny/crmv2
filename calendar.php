@@ -1,5 +1,5 @@
 <link href='assets/css/fullcalendar.css' rel='stylesheet' />
-<link href='assets/css/fullcalendar.print.css' rel='stylesheet' media='print' />
+<!-- <link href='assets/css/fullcalendar.print.css' rel='stylesheet' media='print' /> -->
 <script src='assets/js/moment.min.js'></script>
 <script src='assets/js/jquery.min.js'></script>
 <script src='assets/js/jquery-ui.min.js'></script>
@@ -154,17 +154,22 @@
 </script>
 <style>
 
-    body {
+    /*body {
         margin-top: 0px;
         text-align: center;
-        font-size: 14px;
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-    }
+        font-size: 15px;
+        font-family: "Futura Medium";
+    }*/
 
 
     #calendar {
-        float: right;
-        width: 960px;
+        margin-top: 10px;
+        margin-left: 10px;
+        text-align: left;
+        font-size: 16px;
+        font-family: "Futura Medium";
+        float: center;
+        width: 1030px;
     }
 
 </style>

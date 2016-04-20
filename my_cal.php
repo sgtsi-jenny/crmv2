@@ -71,29 +71,19 @@
                     <!-- <?php
                         $no_employee_msg=' Personal Information must be saved.';
                     ?> -->
-                    <li <?php echo $tab=="1"?'class="active"':''?>><a href="my_cal.php<?php echo !empty($employee)?"?id={$employee['id']}":''; ?>" >Calendar</a>
+                    <li <?php echo $tab=="1"?'class="active"':''?>><a href="" >Calendar</a>
                     </li>
-                    <li <?php echo $tab=="2"?'class="active"':''?> ><a href="?tab=2<?php echo !empty($employee)?"&id={$employee['id']}":''; ?>">Calendar List</a>
+                    <li><a href="calendar_list.php">Calendar List</a>
                     
                 </ul>
                 <div class="tab-content">
+                <?php
+                                include 'calendar.php';   
+                                ?>
+                                
+                        <div id='calendar'></div>
                   <div class="active tab-pane" >
-                    <?php
-                        switch ($tab) {
-                            case '1':
-                                #PERSONAL INFORMATION
-                                $form='my_cal.php';
-                                break;
-                            case '2':
-                                #EDUCATION
-                                $form='education.php';
-                                break;
-                            default:
-                                $form='personal_information.php';
-                                break;
-                        }
-                        //require_once("admin/employee/".$form);
-                    ?>
+                                 
                   </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
               </div><!-- /.nav-tabs-custom -->

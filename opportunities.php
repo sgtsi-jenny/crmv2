@@ -84,6 +84,7 @@
                                                             elseif($key=='id'):
                                                         ?>                                                                          
                                                             <td>
+                                                                <a class='btn btn-sm btn-warning' href='.php?id=<?php echo $value;?>'><span class='fa fa-pencil'></span></a>
                                                                 <a class='btn btn-sm btn-brand' href='frm_opportunities.php?id=<?php echo $value;?>'><span class='fa fa-pencil'></span></a>
                                                                 <a class='btn btn-sm btn-danger' href='delete.php?id=<?php echo $value?>&t=opp' onclick='return confirm("This opportunity will be deleted.")'><span class='fa fa-trash'></span></a>
                                                             </td>
