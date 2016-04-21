@@ -70,7 +70,7 @@
                                
          <section class="content-header">
         <br/>
-          <a href='opportunities.php' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> Opportunity List</a>
+          <a href='opportunities.php' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> List of All Opportunities</a>
           <a href='org_opp.php?id=<?php echo $opp['org_id'] ?>' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> Back to My Opportunity</a>
           </section>
         <section class="content">
@@ -113,7 +113,6 @@
                                 <?php
                                 Alert();
                                 ?>
-
                 <div id='collapseForm' class='collapse'>
                               <form class='form-horizontal' action='save_opp_prod.php' onsubmit="return validatePost(this)" method="POST" >
                                  <input type='hidden' name='opp_prod' value='<?php echo !empty($data)?$data['id']:""?>'>
@@ -123,11 +122,11 @@
                                         <label for="" class="col-md-4 control-label">Product Name *</label>
                                         <div class="col-sm-6">
                                             <select class='form-control' id='prod_id' onchange='get_price()' name='prod_id' data-placeholder="Select a product" <?php echo!(empty($data))?"data-selected='".$data['prod_id']."'":NULL ?>style='width:100%' required>
-                                            
+                                                <option>Select Product</option>
                                                 <?php
                                                     foreach ($products as $key => $row):
                                                 ?>
-                                                    <option data-price='<?php echo $row['unit_price'] ?>' placeholder="Select product" value='<?php echo $row['id']?>'><?php echo $row['product_name']?></option>
+                                                    <option data-price='<?php echo $row['unit_price'] ?>' placeholder="Select product" value='<?php echo $row['id']?>' <?php echo (!empty($data) && $row['id']==$data['prod_id']?'selected':'') ?> required><?php echo $row['product_name']?></option>
                                                     
                                                 <?php
                                                     endforeach;
@@ -139,7 +138,7 @@
                                       <div class="form-group">
                                         <label for="" class="col-sm-4 control-label">Base Price</label>
                                         <div class="col-sm-6">
-                                            <input class="form-control" name='prod_based_price' id="prod_based_price"  type="text" required>
+                                            <input class="form-control" name='prod_based_price' id="prod_based_price"   type="text" value='<?php echo !empty($data)?$data['prod_based_price']:"" ?>' readonly required>
                                         </div>
                                       </div>
                                       <div class="form-group">
@@ -225,7 +224,7 @@
                                                     <td class='text-right'><?php echo htmlspecialchars(number_format($row['prod_price'],2)) ?></td>
                                                     <td class='text-right'><?php echo htmlspecialchars(number_format($row['commission_rate'],2)) ?></td>
                                                     <td>
-                                                        <a href='opp_products.php?id=<?php echo $opp['id']?>&prod_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
+                                                        <a href='opp_prods.php?id=<?php echo $opp['id']?>&prod_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
                                                         <!--<a href='' class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></a>-->
                                                         <a class='btn btn-sm btn-danger' href='delete_prod.php?id=<?php echo $row['id']?>&t=oprod&opp_id=<?php echo $opp['opp_id']?>' onclick='return confirm("This product will be deleted.")'><span class='fa fa-trash'></span></a>
                                                     </td>

@@ -9,21 +9,21 @@
          redirect("index.php");
     }
     $tab="2";
-    if(!empty($_GET['tab']) && !is_numeric($_GET['tab'])){
-        redirect("org_opp.php".(!empty($employee)?'?id='.$employee['id']:''));
-        die;
-    }
-    else{
-        if(!empty($_GET['tab'])){
-            if($_GET['tab'] >0 && $_GET['tab']<=9){
-                $tab=$_GET['tab'];
-            }
-            else{
-                #invalid TAB
-                redirect("my_cal.php".(!empty($employee)?'?id='.$employee['id']:''));
-            }
-        }
-    }
+    // if(!empty($_GET['tab']) && !is_numeric($_GET['tab'])){
+    //     redirect("org_opp.php".(!empty($employee)?'?id='.$employee['id']:''));
+    //     die
+    // }
+    // else{
+    //     if(!empty($_GET['tab'])){
+    //         if($_GET['tab'] >0 && $_GET['tab']<=9){
+    //             $tab=$_GET['tab'];
+    //         }
+    //         else{
+    //             #invalid TAB
+    //             redirect("my_cal.php".(!empty($employee)?'?id='.$employee['id']:''));
+    //         }
+    //     }
+    // }
     if(empty($_GET['id'])){
         //Modal("No Account Selected");
         redirect("customers.php");
@@ -96,7 +96,7 @@
                                
          <section class="content-header">
         <br/>
-          <a href='opportunities.php' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> Opportunity List</a>
+          <a href='opportunities.php' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> List of All Opportunities</a>
           <a href='org_opp.php?id=<?php echo $opp['org_id'] ?>' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> Back to My Opportunity</a>
           </section>
         <section class="content">
@@ -211,7 +211,7 @@
                                     <div class="col-sm-6">
                                         <select class='form-control' name='status' data-placeholder="Select an option" <?php echo!(empty($eve))?"data-selected='".$eve['stat_id']."'":NULL ?> required>
                                                     <?php
-                                                        echo makeOptions($event_stat);
+                                                        echo makeOptions($event_stat,'Select Status',NULL,'',!(empty($eve))?$eve['stat_id']:NULL)
                                                     ?>
                                         </select>
                                     </div>  
@@ -222,7 +222,7 @@
                                     <div class="col-sm-6">
                                         <select class='form-control' name='type' data-placeholder="Select an option" <?php echo!(empty($eve))?"data-selected='".$eve['atype_id']."'":NULL ?> required>
                                                     <?php
-                                                        echo makeOptions($activity_type);
+                                                        echo makeOptions($activity_type,'Select Status',NULL,'',!(empty($eve))?$eve['atype_id']:NULL)
                                                     ?>
                                         </select>
                                     </div>  
@@ -312,7 +312,7 @@
                                     <div class="col-sm-6">
                                         <select class='form-control' name='status' data-placeholder="Select an option" <?php echo!(empty($to_do))?"data-selected='".$to_do['stat_id']."'":NULL ?> required>
                                                     <?php
-                                                        echo makeOptions($to_do_stat);
+                                                        echo makeOptions($to_do_stat,'Select Status',NULL,'',!(empty($to_do))?$to_do['stat_id']:NULL)
                                                     ?>
                                         </select>
                                     </div>  

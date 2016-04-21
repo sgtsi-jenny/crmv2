@@ -73,8 +73,10 @@
 		// }
 		foreach ($array as $row) {
 			list($value,$display) = array_values($row);
+				//echo $checked_value."-". $value.";";
+				//var_dump($checked_value!=NULL && $checked_value==$value);
 				if($checked_value!=NULL && $checked_value==$value){
-					$options.="<option value='".htmlspecialchars($value)."' checked $disable>".htmlspecialchars($display)."</option>";
+					$options.="<option value='".htmlspecialchars($value)."' selected $disable>".htmlspecialchars($display)."</option>";
 				}
 				else
 				{

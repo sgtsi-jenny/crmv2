@@ -9,7 +9,7 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
               </a>
             </li>
-            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="my_cal.php" || "calendar_list.php"?"active":"";?>" >
+            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="my_cal.php"?"active":"";?>">
               <a href="my_cal.php">
                 <i class="fa fa-calendar-o"></i> <span>Calendar</span>
               </a>

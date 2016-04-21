@@ -78,8 +78,8 @@
                                                             foreach ($contact as $key => $value):
                                                             if($key=='profile_pic'):
                                                         ?>
-                                                            <td><a href='uploads/<?php echo $account['profile_pic'] ?>'>
-                                                                <img src='uploads/<?php echo $account['profile_pic'];?>' class='img-responsive' width='40px' height='40px'></a>
+                                                            <td><a href='uploads/<?php echo $contact['profile_pic'] ?>'>
+                                                                <img src='uploads/<?php echo $contact['profile_pic'];?>' class='img-responsive' width='40px' height='40px'></a>
                                                             </td>
                                                             <?php
                                                             elseif($key=='id'):

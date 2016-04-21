@@ -51,14 +51,14 @@
                                                 <th class='text-center'>Organization Name</th>
                                                 <th class='text-center'>Sales Stage</th>
                                                 <th class='text-center'>Amount</th>
-                                                <th class='text-center'>Creator</th>
+ <!--                                                <th class='text-center'>Creator</th> -->
                                                 <th class='text-center'>Contact Name</th>
                               <th class='text-center' style='min-width:100px'>Action</th>
                             </tr>
                           </thead>
                           <tbody>
                           <?php
-                                            $opportunities=$con->myQuery("SELECT opp_name,org_name,sales_stage,tprice,users,cname,id FROM vw_opp where utype=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+                                            $opportunities=$con->myQuery("SELECT opp_name,org_name,sales_stage,tprice,cname,id FROM vw_opp where utype=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
                                                 foreach ($opportunities as $row):
                                             
                                         ?>

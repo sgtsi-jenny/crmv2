@@ -11,7 +11,7 @@
 
 	$organization="";
   if(!empty($_GET['id'])){
-        $organization=$con->myQuery("SELECT id,org_name,phone_num,email,address,industry,rating,org_type,annual_revenue,assigned_to,description FROM organizations WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
+        $organization=$con->myQuery("SELECT id,org_name,reg_name,trade_name,tin_num,tel_num,phone_num,email,address,industry,rating,org_type,annual_revenue,assigned_to,description,contact_id FROM organizations WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
 
         if(empty($organization)){
             //Alert("Invalid asset selected.");
@@ -132,7 +132,7 @@
                                             <div class='col-sm-11'>
                                                 <select class='form-control' name='contact_id' data-placeholder="Select a Contact name" <?php echo!(empty($organization))?"data-selected='".$organization['contact_id']."'":NULL ?>>
                                                     <?php
-                                                        echo makeOptions($contact);
+                                                        echo makeOptions($contact,'Select Contact Name',NULL,'',!(empty($organization))?$organization['contact_id']:NULL);
                                                     ?>
                                                 </select>
                                             </div>
@@ -151,7 +151,7 @@
                                             <div class='col-sm-11'>
                                                 <select class='form-control' name='industry' data-placeholder="Select a Industry" <?php echo!(empty($organization))?"data-selected='".$organization['industry']."'":NULL ?>>
                                                     <?php
-                                                        echo makeOptions($org_industries);
+                                                        echo makeOptions($org_industries,'Select Industry',NULL,'',!(empty($organization))?$organization['industry']:NULL)
                                                     ?>
                                                 </select>
                                             </div>
@@ -172,7 +172,7 @@
                                             <div class='col-sm-11'>
                                                 <select class='form-control' name='rating' data-placeholder="Select a Rating" <?php echo!(empty($organization))?"data-selected='".$organization['rating']."'":NULL ?>>
                                                     <?php
-                                                        echo makeOptions($org_ratings);
+                                                        echo makeOptions($org_ratings,'Select Rating',NULL,'',!(empty($organization))?$organization['rating']:NULL)
                                                     ?>
                                                 </select>
                                             </div>
@@ -191,7 +191,7 @@
                                             <div class='col-sm-11'>
                                                 <select class='form-control' name='org_type' data-placeholder="Select a Organization Type" <?php echo!(empty($organization))?"data-selected='".$organization['org_type']."'":NULL ?>>
                                                     <?php
-                                                        echo makeOptions($org_types);
+                                                        echo makeOptions($org_types,'Select Type',NULL,'',!(empty($organization))?$organization['org_type']:NULL)
                                                     ?>
                                                 </select>
                                             </div>
@@ -231,7 +231,7 @@
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Description</label>
                                     <div class='col-sm-12 col-md-9'>
-                                        <textarea class='form-control' name='description' value='<?php echo !empty($organization)?$organization['description']:"" ?>'></textarea>
+                                        <textarea class='form-control' name='description' value=''><?php echo !empty($organization)?$organization['description']:"" ?></textarea>
                                     </div>
                                 </div>                              
                                 
