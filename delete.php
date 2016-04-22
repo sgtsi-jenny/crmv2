@@ -26,8 +26,10 @@
 				$page="opportunities.php";
 				break;
 			case 'org_opp':
+				// var_dump($_GET['org_id']);
+				// die;
 				$table="opportunities";
-				$page="org_opp.php?id={$_GET['id']}";
+				$page="org_opp.php?id={$_GET['org_id']}";
 				break;
 			case 'prod':
 				$table="products";

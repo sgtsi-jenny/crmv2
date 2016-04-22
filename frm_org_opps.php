@@ -10,13 +10,23 @@
     }
 
     $org_opp="";
-  if(!empty($_GET['id'])){
-        $org_opp=$con->myQuery("SELECT id,opp_name,org_id,contact_id,opp_type,assigned_to,sales_stage,forecast_amount,amount,description,product_set,expected_close_date,date_created,date_modified FROM opportunities WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
+ if(!empty($_GET['id'])){
+        $org_opp=$con->myQuery("SELECT id,org_name,reg_name,trade_name,tin_num,tel_num,phone_num,email,industry,address,org_type,rating,annual_revenue,users,description,date_created,date_modified FROM vw_org WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($org_opp)){
             //Alert("Invalid asset selected.");
-            //hw_Modifyobject(connection, object_to_change, remove, add)al("Invalid Opportunity Selected");
+            //Modal("Invalid Opportunity Selected");
             redirect("customers.php");
             die();
+        }
+    }
+
+    $data="";
+    if(!empty($_GET['opp_id'])){
+        $data=$con->myQuery("SELECT id,opp_name,org_id,org_name,contact_id,cname,opp_type_id,opp_type,users,sales_stage,forecast_amount,amount,tprice,description,sales_stage_id,product_set,expected_close_date,date_created,date_modified FROM vw_opp WHERE id=? LIMIT 1",array($_GET['opp_id']))->fetch(PDO::FETCH_ASSOC);
+        if(empty($data)){
+            Modal("Invalid product selected");
+            redirect("opp_products.php");
+            die;
         }
     }
 
@@ -57,33 +67,15 @@
                   <div class="row">
                     <div class='col-sm-12 col-md-8 col-md-offset-1'>
                         <form class='form-horizontal' method='POST' action='save_org_opps.php'>
-                                <input type='hidden' name='id' value='<?php echo !empty($opportunity)?$opportunity['id']:""?>'>
+                                <input type='hidden' name='id' value='<?php echo !empty($data)?$data['id']:""?>'>
+                                <input type='hidden' name='org_id' value='<?php echo $_GET['id']?>'>
                                 
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Opportunity Name *</label>
                                     <div class='col-sm-12 col-md-9'>
-                                        <input type='text' class='form-control' name='opp_name' placeholder='Enter Opportunity Name' value='<?php echo !empty($opportunity)?$opportunity['opp_name']:"" ?>' required>
+                                        <input type='text' class='form-control' name='opp_name' placeholder='Enter Opportunity Name' value='<?php echo !empty($data)?$data['opp_name']:"" ?>' required>
                                     </div>
                                 </div>
-
-                                <!-- <div class='form-group'>
-                                    <label class='col-sm-12 col-md-3 control-label'> Organization Name</label>
-                                    <div class='col-sm-12 col-md-9'>
-                                        
-                                        <div class='row'>
-                                            <div class='col-sm-11'>
-                                                <select class='form-control' name='org_id' data-placeholder="Select a Organization name" <?php echo!(empty($opportunity))?"data-selected='".$opportunity['org_id']."'":NULL ?> >
-                                                    <?php
-                                                        echo makeOptions($org_name);
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class='col-ms-1'>
-                                                <a href='' class='btn btn-sm btn-success'><span class='fa  fa-plus'></span></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
 
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Contact Name</label>
@@ -91,9 +83,12 @@
                                         
                                         <div class='row'>
                                             <div class='col-sm-11'>
-                                                <select class='form-control' name='contact_id' data-placeholder="Select a Contact name" <?php echo!(empty($opportunity))?"data-selected='".$opportunity['contact_id']."'":NULL ?>>
+                                                <select class='form-control' name='contact_id' data-placeholder="Select a Contact name" <?php echo!(empty($data))?"data-selected='".$data['contact_id']."'":NULL ?>>
+                                                    <!-- <?php
+                                                        echo makeOptions($contact,'Select Contact Name',NULL,'',!(empty($data))?$data['contact_id']:NULL)
+                                                    ?> -->
                                                     <?php
-                                                        echo makeOptions($contact);
+                                                        echo makeOptions($contact,'Select Contact Name',NULL,'',!(empty($data))?$data['contact_id']:NULL)
                                                     ?>
                                                 </select>
                                             </div>
@@ -104,46 +99,27 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class='form-group'>
-                                    <label class='col-sm-12 col-md-3 control-label' > User *</label>
-                                    <div class='col-sm-12 col-md-9'>
-                                        
-                                        <div class='row'>
-                                            <div class='col-sm-11'>
-                                            <select id="disabledSelect" class='form-control' name='assigned_to' data-placeholder="Select a user" <?php echo!(empty($opportunity))?"data-selected='".$opportunity['assigned_to']."'":"data-selected='".$_SESSION[WEBAPP]['user']['id']."'" ?> required>
-                                                <?php
-                                                    echo makeOptions($user);
-                                                ?>
-                                            </select>
-                                            </div>
-                                            <div class='col-ms-1'>
-                                            <a href='frm_users.php' class='btn btn-sm btn-success'><span class='fa fa-plus'></span></a>
-                                    </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Expected Close Date*</label>
                                     <div class='col-sm-12 col-md-9'>
                                         <?php
                                         $expected_close_date="";
-                                         if(!empty($opportunity)){
-                                            $expected_close_date=$opportunity['expected_close_date'];
+                                         if(!empty($data)){
+                                            $expected_close_date=$data['expected_close_date'];
                                             if($expected_close_date=="0000-00-00"){
                                                 $expected_close_date="";
                                             }
                                          }
                                         ?>
-                                        <?php
+                                        <!-- <?php
                                         $purchase_date="";
-                                         if(!empty($asset)){
-                                            $purchase_date=$asset['purchase_date'];
+                                         if(!empty($data)){
+                                            $purchase_date=$data['purchase_date'];
                                             if($purchase_date=="0000-00-00"){
                                                 $purchase_date="";
                                             }
                                          }
-                                        ?>
+                                        ?> -->
                                         <input type='date' class='form-control' name='expected_close_date' value='<?php echo $expected_close_date; ?>' required>
                                     </div>
                                 </div>
@@ -153,9 +129,9 @@
                                         
                                         <div class='row'>
                                             <div class='col-sm-11'>
-                                                <select class='form-control' name='sales_stage' data-placeholder="Select Sales Stage" <?php echo!(empty($opportunity))?"data-selected='".$opportunity['sales_stage']."'":NULL ?> required>
+                                                <select class='form-control' name='sales_stage' data-placeholder="Select Sales Stage" <?php echo!(empty($data))?"data-selected='".$data['opp_type']."'":NULL ?> required>
                                                     <?php
-                                                        echo makeOptions($opp_statuses);
+                                                        echo makeOptions($opp_statuses,'Select Status',NULL,'',!(empty($data))?$data['sales_stage_id']:NULL)
                                                     ?>
                                                 </select>
                                             </div>
@@ -172,9 +148,9 @@
                                         
                                         <div class='row'>
                                             <div class='col-sm-11'>
-                                                <select class='form-control' name='opp_type' data-placeholder="Select a Opportunity Type" <?php echo!(empty($opportunity))?"data-selected='".$opportunity['opp_type']."'":NULL ?>>
+                                                <select class='form-control' name='opp_type' data-placeholder="Select a Opportunity Type" <?php echo!(empty($data))?"data-selected='".$data['opp_type_id']."'":NULL ?>>
                                                     <?php
-                                                        echo makeOptions($opp_types);
+                                                        echo makeOptions($opp_types,'Select Type',NULL,'',!(empty($data))?$data['opp_type_id']:NULL);
                                                     ?>
                                                 </select>
 
@@ -189,22 +165,22 @@
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Forecast Amount</label>
                                     <div class='col-sm-12 col-md-9'>
-                                        <input type='text' class='form-control' placeholder='0.00' name='forecast_amount' value='<?php echo !empty($opportunity)?$opportunity['forecast_amount']:"0" ?>'>
+                                        <input type='text' class='form-control' placeholder='0.00' name='forecast_amount' value='<?php echo !empty($data)?$data['forecast_amount']:"0" ?>'>
                                     </div>
                                 </div>
 
                                 <div class='form-group'>
                                     <label class='col-sm-12 col-md-3 control-label'> Description</label>
                                     <div class='col-sm-12 col-md-9'>
-                                        <textarea class='form-control' name='description' value='<?php echo !empty($opportunity)?$opportunity['description']:"" ?>'></textarea>
+                                        <textarea class='form-control' name='description' value=''><?php echo !empty($data)?$data['description']:"" ?></textarea>
                                     </div>
                                 </div>                             
                                 
 
                                 <div class='form-group'>
                                     <div class='col-sm-12 col-md-9 col-md-offset-3 '>
-                                        <a href='org_opps.php?id=<?php echo $org_opps['org_id'] ?>' class='btn btn-default'>Cancel</a>
-                                        <button type='submit' class='btn btn-success'> <span class='fa fa-check'></span> Save</button>
+                                        <button type='submit' class='btn btn-brand'> <span class='fa fa-check'></span> Save</button>
+                                        <a href='org_opp.php?id=<?php echo $_GET['id'] ?>' class='btn btn-default'>Cancel</a>
                                     </div>
                                     
                                 </div>                       

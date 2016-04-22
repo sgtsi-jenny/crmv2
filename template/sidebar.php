@@ -15,7 +15,7 @@
               </a>
             </li>
 
-            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="customers.php"?"active":"";?>">
+            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="customers.php" || (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="org_details.php" || (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="org_opp.php" || (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="org_contact_persons.php" ?"active":"";?>">
               <a href="customers.php">
                 <i class="fa fa-users"></i> <span>Customers</span>
               </a>

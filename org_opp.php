@@ -32,7 +32,7 @@
         die();
     }
     else{
-        $org=$con->myQuery("SELECT id,org_name,phone_num,email,industry,address,org_type,rating,annual_revenue,users,description,date_created,date_modified FROM vw_org WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
+        $org=$con->myQuery("SELECT id,org_name,reg_name,trade_name,tin_num,tel_num,phone_num,email,industry,address,org_type,rating,annual_revenue,users,description,date_created,date_modified FROM vw_org WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($org)){
             Modal("Invalid Opportunities Selected");
             redirect("customers.php");
@@ -49,16 +49,6 @@
     require_once("template/sidebar.php");
 ?>
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-       <!--  <section class="content-header">
-          <h1>
-            Employee Form
-          </h1>
-          <br/>
-          <a href='employees.php' class='btn btn-default'><span class='glyphicon glyphicon-arrow-left'></span> Employee list</a>
-        </section> -->
-
-        <!-- Main content -->
          <section class="content-header">
                                       <h1>
                                       <img src="uploads/summary_organizations.png" width="50" height="50" title="Organization" alt="Organization" />
@@ -88,9 +78,14 @@
                 </ul>
                 <div class="tab-content">
                   <div class="active tab-pane" >
+
                   <div class='col-ms-12 text-right'>
                           <a href='frm_org_opps.php?id=<?php echo $org['id']?>' class='btn btn-brand'> Add New Opportunity<span class='fa fa-plus'></span> </a>
                         </div>
+                        <br/>
+                  <?php 
+                    Alert();
+                  ?>
                   <h2>List of Opportunities</h2>
                    <br>
                     <table id='ResultTable' class='table table-bordered table-striped'>
@@ -133,8 +128,9 @@
                                                             elseif($key=='id'):
                                                         ?>                                                                          
                                                             <td class='text-center'>
-                                                                <a class='btn btn-sm btn-brand' href='frm_opportunities.php?id=<?php echo $value;?>'><span class='fa fa-pencil'></span></a>
-                                                                <a class='btn btn-sm btn-danger' href='delete.php?id=<?php echo $value?>&t=org_opp' onclick='return confirm("This opportunity will be deleted.")'><span class='fa fa-trash'></span></a>
+                                                                <a class='btn btn-sm btn-brand' href='frm_org_opps.php?id=<?php echo $_GET['id'];?>&opp_id=<?php echo $value;?>'><span class='fa fa-pencil'></span></a>
+
+                                                                <a class='btn btn-sm btn-danger' href='delete.php?org_id=<?php echo $_GET['id'];?>&id=<?php echo $value?>&t=org_opp' onclick='return confirm("This opportunity will be deleted.")'><span class='fa fa-trash'></span></a>
                                                             </td>
                                                         <?php
                                                             else:
@@ -157,31 +153,6 @@
                           </tbody>
                         </table>
 
-
-
-
-
-
-
-
-
-
-                    <!-- <?php
-                        switch ($tab) {
-                            case '1':
-                                #PERSONAL INFORMATION
-                                $form='org_detailed.php';
-                                break;
-                            case '2':
-                                #EDUCATION
-                                $form='education.php';
-                                break;
-                            default:
-                                $form='personal_information.php';
-                                break;
-                        }
-                        //require_once("admin/employee/".$form);
-                    ?> -->
                   </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
               </div><!-- /.nav-tabs-custom -->
