@@ -30,13 +30,13 @@
                                 <div class='panel-heading text-left'>
                                 <div class="row">
                                     <h2 class="col-xs-10">Recent Client Activity</h2>
-                                    <span class="fa fa-tasks fa-3x col-md-2" style="padding-top: 10px;"></span>
+                                    <span class="fa fa-tasks fa-3x col-md-2" style="padding-top: 15px;"></span>
                                     
                                 </div>
                                 </div>
                                     <?php
                                     $uid=$_SESSION[WEBAPP]['user']['id'];
-                                        $activities=$con->myQuery("SELECT opportunities.opp_name, notes, DATE_FORMAT(action_date, '%M %d %h:%i %p') FROM activities
+                                        $activities=$con->myQuery("SELECT opportunities.opp_name,  DATE_FORMAT(action_date, '%M %d, %Y %h:%i %p'),notes FROM activities
                                         inner join opportunities on activities.opp_id=opportunities.id
                                         inner join users on activities.user_id=users.id
                                         where opportunities.is_deleted=0
@@ -47,20 +47,20 @@
 
                                     ?>
                                     <div style="padding:10px;">
-                                    <table class='table table-bordered table-condensed 'id='dataTables'>
-                                        <thead>
-                                            <tr>    
-                                                <th >Client</th>
-                                                <th>Action</th>
-                                                <th class='date-td'>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <table id='ResultTable' class='table table-bordered table-striped'>
+                          <thead>
+                            <tr>
+                                                <th style='min-width:70px'>Client</th>
+                                                <th class='date-td' style='min-width:80px'>Date</th>
+                                                <th style='min-width:130px'>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
                                             <?php
                                                     foreach ($activities as $activity):
                                                     
                                             ?>
-                                                    <tr>
+                                            <tr>
                                                 <?php
                                                     foreach ($activity as $key => $value):
                                                     if($key=='id'):
@@ -82,13 +82,12 @@
                                                     endforeach;
                                                 ?>
                                                     </tr>
-                                            <?php
-                                                   
-                                                    endforeach;
+                                                <?php
+                                                endforeach;
                                             ?>
-                                            
-                                        </tbody>
-                                    </table>
+                            
+                          </tbody>
+                        </table>
                                     </div>
                                     <?php
                                         else:
@@ -106,9 +105,14 @@
                                 <div class='col-md-4'>
                                 <div class='panel panel-primary'>
                                 <div class='panel-heading text-left'>
+                                <!-- <div class="row">
+                                    <h4 class="col-xs-10">Birthdays</h4>
+                                    <span class="fa fa-gift fa-3x col-md-2"></span>
+                                    
+                                </div> -->
                                 <div class="row">
-                                    <h4 class="col-xs-9">Birthdays</h4>
-                                    <span class="fa fa-gift fa-3x col-md-3"></span>
+                                    <h2 class="col-xs-10">Birthdays</h2>
+                                    <span class="fa fa-gift fa-3x col-md-2" style="padding-top: 15px;"></span>
                                     
                                 </div>
                                 </div>
@@ -191,7 +195,22 @@
             ?>
         </section><!-- /.content -->
   </div>
-  
+ <script type="text/javascript">
+  $(function () {
+        $('#ResultTable').DataTable({
+            "scrollX": true
+            // ,
+            // dom: 'Bfrtip',
+            //     buttons: [
+            //         {
+            //             extend:"excel",
+            //             text:"<span class='fa fa-download'></span> Download as Excel File "
+            //         }
+            //         ],
+
+        });
+      });
+</script> 
 <?php
 	makeFoot();
 ?>

@@ -83,8 +83,9 @@
                             </tr>
                           </thead>
                           <tbody>
-                          <?php
-                                            $calendars=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,id FROM vw_calendar where activity_type<>5 and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+                                        <?php
+                                            //Filter by date not less than date today
+                                            $calendars=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,id FROM vw_calendar where activity_type<>5 AND start_date>=NOW() and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
                                                 foreach ($calendars as $row):
                                             
                                         ?>

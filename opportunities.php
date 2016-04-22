@@ -48,7 +48,7 @@
                           <thead>
                             <tr>
                                                 <th class='text-center'>Opportunity Name</th>
-                                                <th class='text-center'>Organization Name</th>
+                                                <th class='text-center'>Customer's Name</th>
                                                 <th class='text-center'>Sales Stage</th>
                                                 <th class='text-center'>Amount</th>
  <!--                                                <th class='text-center'>Creator</th> -->

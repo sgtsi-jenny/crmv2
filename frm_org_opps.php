@@ -14,7 +14,7 @@
         $org_opp=$con->myQuery("SELECT id,opp_name,org_id,contact_id,opp_type,assigned_to,sales_stage,forecast_amount,amount,description,product_set,expected_close_date,date_created,date_modified FROM opportunities WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($org_opp)){
             //Alert("Invalid asset selected.");
-            //Modal("Invalid Opportunity Selected");
+            //hw_Modifyobject(connection, object_to_change, remove, add)al("Invalid Opportunity Selected");
             redirect("customers.php");
             die();
         }

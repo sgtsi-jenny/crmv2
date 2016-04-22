@@ -9,7 +9,7 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
               </a>
             </li>
-            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="my_cal.php"?"active":"";?>">
+            <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="my_cal.php" || (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="calendar_list.php" ?"active":""; ?>">
               <a href="my_cal.php">
                 <i class="fa fa-calendar-o"></i> <span>Calendar</span>
               </a>
@@ -20,11 +20,17 @@
                 <i class="fa fa-users"></i> <span>Customers</span>
               </a>
             </li>
+            <?php
+              if(AllowUser(array(1))):
+            ?>
             <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="opportunities.php"?"active":"";?>">
               <a href="opportunities.php">
                 <i class="fa fa-lightbulb-o"></i> <span>Oppurtunities</span>
               </a>
             </li>
+            <?php 
+            endif;
+             ?>
             <li class="<?php echo (substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'], "/")+1))=="contacts.php"?"active":"";?>">
               <a href="contacts.php">
                 <i class="fa fa-phone"></i> <span>Contacts</span>

@@ -135,7 +135,7 @@
                                 <td><?php echo htmlspecialchars(number_format($org['annual_revenue'],2)) ?></td>
                             </tr>
                             <tr>
-                                <th>Assigned To:</th>
+                                <th>Creator:</th>
                                 <td><?php echo htmlspecialchars($org['users']) ?></td>
                             </tr>
                             <tr>
