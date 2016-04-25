@@ -16,23 +16,23 @@
 		
 
 		$errors="";
-		if (empty($inputs['prod_price'])){
-			$errors.="Enter product price. <br/>";
-		}
+		// if (empty($inputs['prod_price'])){
+		// 	$errors.="Enter product price. <br/>";
+		// }
 		//var_dump($inputs);
 		//die;
 		
 
 		if($errors!=""){
 
-			Alert("You have the following errors: <br/>".$errors,"danger");
-			if(empty($inputs['prod_id'])){
-				redirect("opportunities.php");
-			}
-			else{
-				redirect("opportunities.php");
-			}
-			die;
+			// Alert("You have the following errors: <br/>".$errors,"danger");
+			// if(empty($inputs['prod_id'])){
+			// 	redirect("opportunities.php");
+			// }
+			// else{
+			// 	redirect("opportunities.php");
+			// }
+			// die;
 		}
 		else{
 

@@ -35,7 +35,7 @@
         $org=$con->myQuery("SELECT id,org_name,reg_name,trade_name,tin_num,tel_num,phone_num,email,industry,address,org_type,rating,annual_revenue,users,description,date_created,date_modified FROM vw_org WHERE id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($org)){
             Modal("Invalid Organization Selected");
-            redirect("opportunities.php");
+            redirect("customers.php");
             die;
         }
     }

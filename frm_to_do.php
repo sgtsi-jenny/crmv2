@@ -10,10 +10,12 @@
     }
 
     $to_do="";
+    // var_dump($_GET['id']);
+    // die;
   if(!empty($_GET['id'])){
         $to_do=$con->myQuery("SELECT ev.stat_id,ev.event_stat,ev.atype_id,ev.activity_type,ev.priority_id,ev.priority,ev.location,ev.event_place,ev.description,ev.subjects,DATE(ev.start_date) AS start_date,TIME(ev.start_date) AS start_time,DATE(ev.end_date) AS end_date,TIME(ev.start_date) AS end_time,ev.opp_name,ev.assigned_to,ev.due_date,ev.id FROM vw_calendar ev WHERE ev.is_deleted=0 AND ev.id=?",array($_GET['id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($to_do)){
-            redirect("events.php");
+            redirect("calendar_list.php");
             die();
         }
     }
@@ -106,7 +108,7 @@
                                     <div class="col-sm-8">
                                         <select class='form-control' name='status' data-placeholder="Select an option" <?php echo!(empty($to_do))?"data-selected='".$to_do['stat_id']."'":NULL ?> required>
                                                     <?php
-                                                        echo makeOptions($to_do_stat);
+                                                        echo makeOptions($to_do_stat,'Select Contact Name',NULL,'',!(empty($to_do))?$to_do['stat_id']:NULL)
                                                     ?>
                                         </select>
                                     </div>  
@@ -143,7 +145,7 @@
                                         
                                                 <select class='form-control' name='priority' data-placeholder="Select an option" <?php echo!(empty($to_do))?"data-selected='".$event['priority_id']."'":NULL ?>>
                                                     <?php
-                                                    echo makeOptions($prior);
+                                                    echo makeOptions($prior,'Select Contact Name',NULL,'',!(empty($to_do))?$to_do['priority_id']:NULL)
                                                 ?>
                                                 </select>
                                     </div>

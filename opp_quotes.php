@@ -40,13 +40,13 @@
 
     
     $data="";
-   $data=$con->myQuery("SELECT title,q.description,date_uploaded,CONCAT(users.last_name, ', ', users.first_name) AS uname, user_name, document, q.id FROM quotes q INNER JOIN opportunities ON q.opportunity_name=opportunities.id INNER JOIN users ON q.user_name=users.id WHERE q.is_deleted=0 AND q.opportunity_name=? AND q.user_name=?",array($opp['id'],$_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+   $data=$con->myQuery("SELECT f.title,f.description,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, f.user_id, f.document, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.cat_id=1 AND f.opp_id=? AND f.user_id=?",array($opp['id'],$_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
           
 
     if(!empty($_GET['quote_id'])){
         // var_dump($_GET['quote_id']);
         // die;
-        $quotes=$con->myQuery("SELECT title,q.description,date_uploaded,CONCAT(users.last_name, ', ', users.first_name) AS uname, user_name, document, q.id FROM quotes q INNER JOIN opportunities ON q.opportunity_name=opportunities.id INNER JOIN users ON q.user_name=users.id WHERE q.is_deleted=0 AND q.id=? LIMIT 1",array($_GET['quote_id']))->fetch(PDO::FETCH_ASSOC);
+        $quotes=$con->myQuery("SELECT f.title,f.description,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, user_id, document, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.id=? LIMIT 1",array($_GET['quote_id']))->fetch(PDO::FETCH_ASSOC);
         if(empty($quotes)){
             Modal("Invalid quote selected");
             redirect("opp_quotes.php");
@@ -54,8 +54,6 @@
         }
 
     } 
-
-
     //$quote=$con->myQuery("SELECT id,title,opportunity_name,document,description,user_name,date_uploaded FROM quotes WHERE id NOT IN (SELECT quote_id FROM opp_quotes WHERE opp_id=? AND is_deleted=0)AND is_deleted=0",array($opp['id']))->fetchAll(PDO::FETCH_ASSOC);
   
     $opps=$con->myQuery("SELECT id,opp_name FROM opportunities where is_deleted=0")->fetchAll(PDO::FETCH_ASSOC);
@@ -120,9 +118,8 @@
                                 <?php
                                 Alert();
                                 ?>
-
                 <div id='collapseForm' class='collapse'>
-                              <form class='form-horizontal' action='save_opp_quote.php' onsubmit="return validatePost(this)" method="POST" >
+                              <form class='form-horizontal' action='save_opp_quote.php' enctype="multipart/form-data" onsubmit="return validatePost(this)" method="POST" >
                                  <!-- <input type='hidden' name='quote_id' value='<?php echo !empty($data)?$data['id']:""?>'> -->
 
                                  <input type='hidden' name='opp_quote' value='<?php echo !empty($quotes)?$quotes['id']:""?>'>
@@ -139,38 +136,32 @@
                                         </div>  
                                       </div> -->
 
-                                <div class='form-group'>
+                                <!-- <div class='form-group'>
                                     <label for="" class="col-md-4 control-label"> Document Upload</label>
                                     <div class='col-sm-5'>
-                                        <a download='<?php echo $account["document"];?>' href='uploads/Documents/<?php echo $account['document'] ?>'>
+                                        <a download='<?php echo $quotes["document"];?>' href='uploads/Files/<?php echo $quotes['document'] ?>'>
                                         <?php echo !empty($quotes)?$quotes['document']:"" ?>
                                     </a>
                                         <input type='file' class='form-control' name='file' <?php echo !empty($quotes['id'])?"":'required=""'?>>
+                                    </div>
+                                </div> -->
+
+                                <div class='form-group'>
+                                    <label for="" class="col-md-4 control-label">File *</label>
+                                    <div class="col-md-1">
+                                      <input type='file' name='file' class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText=" &nbsp;Select File">
                                     </div>
                                 </div>
 
                                 <div class='form-group'>
                                     <label for="" class="col-md-4 control-label"> Title *</label>
                                     <div class="col-sm-5">
-                                        <a download='<?php echo $account["document"];?>' href='uploads/Documents/<?php echo $account['document'] ?>'>
-                                            <?php echo !empty($docs)?$docs['document']:"" ?>
+                                        <a download='<?php echo $quotes["document"];?>' href='uploads/Files/<?php echo $quotes['document'] ?>'>
+                                            <?php echo !empty($quotes)?$quotes['document']:"" ?>
                                         </a>
                                         <input type='text' class='form-control' name='title' placeholder='Enter Title' value='<?php echo !empty($quotes)?$quotes['title']:"" ?>' required>
                                     </div>
                                 </div>
-
-                                <!-- <div class='form-group'>
-                                    <label for="" class="col-md-4 control-label"> Customer's Name</label>
-                                    <div class='col-sm-5'>
-                                        
-                                        <select class='form-control' name='opportunity_name' data-placeholder="Select opportunity" <?php echo!(empty($opp))?"data-selected='".$opp['id']."'":NULL ?>>
-                                                    <option value='<?php echo !empty($account)?$account['opportunity_name']:""?>'><?php echo !empty($opp_value)?$opp_value['opp_name']:""?></option>
-                                                    <?php
-                                                        echo makeOptions($opps);
-                                                    ?>
-                                        </select>
-                                    </div>
-                                </div> -->
 
                                <div class='form-group'>
                                     <label for="" class="col-md-4 control-label"> Description</label>
@@ -197,9 +188,10 @@
                                                 <th class='text-center'>Document Name</th>
                                                 <th class='text-center'>Description</th>
                                                 <th class='text-center'>Date Uploaded</th>
+                                                <th class='text-center'>Date Modified</th>
                                                 <!-- <th class='text-center'>Creator</th> -->
-                                                <th class='text-center'>Document</th>
-                                                <th class='text-center' style='min-width:40px'>Action</th>
+                                                <!-- <th class='text-center'>Document</th> -->
+                                                <th class='text-center' style='min-width:30px'>Action</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -207,26 +199,36 @@
                                               foreach($data as $row):
                                             ?>
                                                 <tr>
-                                                    <td><?php echo htmlspecialchars($row['title']) ?></td>
-                                                    <td><?php echo htmlspecialchars($row['description']) ?></td>
-                                                    <td><?php echo htmlspecialchars($row['date_uploaded']) ?></td>
+                                                    <td  class='text-center'><?php echo htmlspecialchars($row['title']) ?></td>
+                                                    <td  class='text-center'><?php echo htmlspecialchars($row['description']) ?></td>
+                                                    <td  class='text-center'><?php echo htmlspecialchars($row['date_uploaded']) ?></td>
+                                                    <td  class='text-center'><?php echo htmlspecialchars($row['date_modified']) ?></td>
                                                     <!-- <td><?php echo htmlspecialchars($row['uname']) ?></td> -->
                                                     <?php
                                                             foreach ($row as $key => $value):
-                                                            if($key=='document'):
+                                                            // if($key=='document'):
                                                         ?> 
-                                                    <td>
+                                                    <!-- <td>
                                                                 <a download='<?php echo $row["document"];?>' href='uploads/Documents/<?php echo $row['document'] ?>'>
                                                                 Download
                                                                 </a>
-                                                    </td>
+                                                    </td> -->
                                                     <?php
-                                                            elseif($key=='id'):
+                                                            if($key=='id'):
                                                     ?>
-                                                    <td align="center">
+                                                    <td class='text-center'>
                                                         <a href='opp_quotes.php?id=<?php echo $opp['id']?>&quote_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
-                                                        
+
+                                                          <?php
+                                                            if(AllowUser(array(1))):
+                                                          ?>                                                        
                                                         <a href='delete.php?id=<?php echo $row['id']?>&t=oquotes&opp_id=<?php echo $opp['id']?>' class='btn btn-sm btn-danger' onclick='return confirm("This quote will be deleted.")'><span class='fa fa-trash'></span></a>
+                                                        <?php 
+                                                        endif;
+                                                        ?>
+
+                                                        <!-- <a href='download_file.php?id=<?php echo $row['id']?>&type=q' class='btn btn-sm btn-default'><span class='fa fa-download'></span></a> -->
+                                                        <a download='<?php echo $row['document'];?>' href='uploads/Files/<?php echo $row['document'] ?>'  class='btn btn-sm btn-default'><span class='fa fa-download'></span>
                                                     </td>
                                                 <?php
                                                         endif;

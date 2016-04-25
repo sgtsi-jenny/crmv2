@@ -36,8 +36,11 @@
 				$page="products.php";
 				break;
 			case 'oprod':
+				// var_dump($_GET['opp_id']);
+				// var_dump($_GET['id']);
+				// die;
 				$table="opp_products";
-				$page="opp_products.php?id={$_GET['id']}";
+				$page="opp_prods.php?id={$_GET['opp_id']}";
 				break;
 			case 'ocon':
 				$table="opp_contacts";
@@ -48,12 +51,34 @@
 				$page="opp_documents.php?id={$_GET['opp_id']}";
 				break;
 			case 'oquotes':
-				$table="quotes";
+				// var_dump($_GET['opp_id']);
+				// var_dump($_GET['id']);
+				// die;
+				$table="files";
 				$page="opp_quotes.php?id={$_GET['opp_id']}";
+				break;	
+			case 'opurchase':
+				$table="files";
+				$page="opp_purchases.php?id={$_GET['opp_id']}";
+				break;
+			case 'oinvoice':
+				$table="files";
+				$page="opp_invoices.php?id={$_GET['opp_id']}";
+				break;
+			case 'other':
+				$table="files";
+				$page="opp_others.php?id={$_GET['opp_id']}";
 				break;
 			case 'eve':
 				$table="events";
-				$page="events.php";
+				$page="calendar_list.php";
+				break;
+			case 'opp_eve':
+				// var_dump($_GET['org_id']);
+				// var_dump($_GET['id']);
+				// die;
+				$table="events";
+				$page="opp_events.php?id={$_GET['org_id']}";
 				break;
 			case 'l':
 				$table="locations";

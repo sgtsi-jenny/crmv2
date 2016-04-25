@@ -36,8 +36,8 @@
 			//IF id exists update ELSE insert
 			if(empty($inputs['id'])){
 				//Insert
-				var_dump("add");
-				die;
+				// var_dump("add");
+				// die;
 				unset($inputs['id']);				
 				
 				date_default_timezone_set('Asia/Manila');

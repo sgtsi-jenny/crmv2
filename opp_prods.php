@@ -225,8 +225,9 @@
                                                     <td class='text-right'><?php echo htmlspecialchars(number_format($row['commission_rate'],2)) ?></td>
                                                     <td>
                                                         <a href='opp_prods.php?id=<?php echo $opp['id']?>&prod_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
-                                                        <!--<a href='' class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></a>-->
-                                                        <a class='btn btn-sm btn-danger' href='delete_prod.php?id=<?php echo $row['id']?>&t=oprod&opp_id=<?php echo $opp['opp_id']?>' onclick='return confirm("This product will be deleted.")'><span class='fa fa-trash'></span></a>
+                                                        <!-- <a class='btn btn-sm btn-danger' href='delete.php?id=<?php echo $row['id']?>&t=oprod&opp_id=<?php echo $opp['opp_id']?>' onclick='return confirm("This product will be deleted.")'><span class='fa fa-trash'></span></a> -->
+
+                                                        <a href='delete.php?id=<?php echo $row['id']?>&t=oprod&opp_id=<?php echo $opp['id']?>' class='btn btn-sm btn-danger' onclick='return confirm("This product will be deleted.")'><span class='fa fa-trash'></span></a>
                                                     </td>
                                                 </tr>
                                             <?php
@@ -259,14 +260,15 @@
 </script>
 <script type="text/javascript">
     function validatePost(post_form){
-        console.log();
+        //console.log();
+        get_price();
         var str_error="";
         $.each($(post_form).serializeArray(),function(index,field){
             console.log(field);
-            if(field.value==""){
+            if(field.value=="" || field.value=="Select Product"){
             
                 switch(field.name){
-                    case "prod_name":
+                    case "prod_id":
                         str_error+="Please select product name. \n";
                         break;
                     case "prod_price":
@@ -282,7 +284,7 @@
             return false;
         }
         else{
-            return true
+            return true;
         }
     }
 

@@ -8,7 +8,7 @@
     if(!AllowUser(array(1))){
          redirect("index.php");
     }
-    $tab="6";
+    $tab="7";
     if(!empty($_GET['tab']) && !is_numeric($_GET['tab'])){
         redirect("org_opp.php".(!empty($employee)?'?id='.$employee['id']:''));
         die;
@@ -40,16 +40,16 @@
 
     
     $data="";
-   $data=$con->myQuery("SELECT f.title,f.subject,f.description,f.document,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, f.user_id, f.document, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.opp_id=? AND f.cat_id=2 AND f.user_id=?",array($opp['id'],$_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+   $data=$con->myQuery("SELECT f.title,f.subject,f.description,f.document,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, f.user_id, f.document,f.amount, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.opp_id=? AND f.cat_id=3 AND f.user_id=?",array($opp['id'],$_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
           
 
-    if(!empty($_GET['po_id'])){
+    if(!empty($_GET['invoice_id'])){
         // var_dump($_GET['po_id']);
         // die;
-        $purchases=$con->myQuery("SELECT f.title,f.subject,f.description,f.document,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, f.user_id, f.document, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.cat_id=2 AND f.id=? LIMIT 1",array($_GET['po_id']))->fetch(PDO::FETCH_ASSOC);
-        if(empty($purchases)){
-            Modal("Invalid purchase order selected");
-            redirect("opp_purchases.php");
+        $invoices=$con->myQuery("SELECT f.title,f.subject,f.description,f.document,f.date_uploaded,f.date_modified,CONCAT(users.last_name, ', ', users.first_name) AS uname, f.user_id, f.document,f.amount, f.id FROM files f INNER JOIN opportunities ON f.opp_id=opportunities.id INNER JOIN users ON f.user_id=users.id WHERE f.is_deleted=0 AND f.cat_id=3 AND f.id=? LIMIT 1",array($_GET['invoice_id']))->fetch(PDO::FETCH_ASSOC);
+        if(empty($invoices)){
+            Modal("Invalid invoice selected");
+            redirect("opp_invoices.php");
             die;
         }
 
@@ -100,9 +100,9 @@
                     </li>
                     <li> <a href="opp_quotes.php?id=<?php echo $_GET['id'] ?>">Quotations</a>
                     </li>
-                    <li <?php echo $tab=="6"?'class="active"':''?>> <a href="">Purchase Orders</a>
+                    <li> <a href="opp_purchases.php?id=<?php echo $_GET['id'] ?>">Purchase Orders</a>
                     </li>
-                    <li> <a href="opp_invoices.php?id=<?php echo $_GET['id'] ?>">Invoices</a>
+                    <li <?php echo $tab=="7"?'class="active"':''?>> <a href="">Invoices</a>
                     </li>
                     <li> <a href="opp_others.php?id=<?php echo $_GET['id'] ?>">Others</a>
                     </li>
@@ -113,7 +113,7 @@
                          <div class='panel-body'>
                                     <div class='col-md-12 text-right'>
                                         <div class='col-md-12 text-right'>
-                                        <button class='btn btn-brand' data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">Add New P.O. File <span class='fa fa-plus'></span> </button>
+                                        <button class='btn btn-brand' data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">Add New Invoice File <span class='fa fa-plus'></span> </button>
                                         </div>                                
                                     </div> 
                                 </div>
@@ -122,13 +122,13 @@
                                 ?>
 
                 <div id='collapseForm' class='collapse'>
-                              <form class='form-horizontal' action='save_opp_purchase.php' onsubmit="return validatePost(this)" method="POST" >
+                              <form class='form-horizontal' action='save_opp_invoice.php' onsubmit="return validatePost(this)" method="POST" >
                                  <!-- <input type='hidden' name='quote_id' value='<?php echo !empty($data)?$data['id']:""?>'> -->
 
-                                 <input type='hidden' name='opp_purchase' value='<?php echo !empty($purchases)?$purchases['id']:""?>'>
-                                 <input type='hidden' name='po_id' value='<?php echo $opp['id']?>'>
-                                 
-                                <div class='form-group'>
+                                 <input type='hidden' name='opp_invoice' value='<?php echo !empty($invoices)?$invoices['id']:""?>'>
+                                 <input type='hidden' name='invoice_id' value='<?php echo $opp['id']?>'>
+
+                                 <div class='form-group'>
                                     <label for="" class="col-md-4 control-label">File *</label>
                                     <div class="col-md-1">
                                       <input type='file' name='file' class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText=" &nbsp;Select File">
@@ -138,50 +138,45 @@
                                 <div class='form-group'>
                                     <label for="" class="col-md-4 control-label"> Title *</label>
                                     <div class="col-sm-5">
-                                        <a download='<?php echo $purchases["document"];?>' href='uploads/Files/<?php echo $purchases['document'] ?>'>
-                                            <?php echo !empty($purchases)?$purchases['document']:"" ?>
+                                        <a download='<?php echo $invoices['document'];?>' href='uploads/Files/<?php echo $invoices['document'] ?>'>
+                                            <?php echo !empty($invoices)?$invoices['document']:"" ?>
                                         </a>
-                                        <input type='text' class='form-control' name='title' placeholder='Enter Title' value='<?php echo !empty($purchases)?$purchases['title']:"" ?>' required>
+                                        <input type='text' class='form-control' name='title' placeholder='Enter Title' value='<?php echo !empty($invoices)?$invoices['title']:"" ?>' required>
                                     </div>
                                 </div>
 
-                                <!-- <div class='form-group'>
-                                    <label for="" class="col-md-4 control-label"> Customer's Name</label>
+                                <div class='form-group'>
+                                    <label for="" class="col-md-4 control-label"> Amount *</label>
                                     <div class='col-sm-5'>
-                                        
-                                        <select class='form-control' name='opp_id' data-placeholder="Select opportunity" <?php echo!(empty($opp))?"data-selected='".$opp['id']."'":NULL ?>>
-                                                    <option value='<?php echo !empty($account)?$account['opportunity_name']:""?>'><?php echo !empty($opp_value)?$opp_value['opp_name']:""?></option>
-                                                    <?php
-                                                        echo makeOptions($opps);
-                                                    ?>
-                                        </select>
+                                        <input type='text' class='form-control' placeholder='0.00' name='amount' value='<?php echo !empty($invoices)?$invoices['amount']:"0" ?>' required>
                                     </div>
-                                </div> -->
+                                </div>
 
                                <div class='form-group'>
                                     <label for="" class="col-md-4 control-label"> Description</label>
                                     <div class='col-sm-5'>
-                                        <textarea class='form-control' name='description' placeholder="Write a short description."><?php echo !empty($purchases)?$purchases['description']:"" ?></textarea>
+                                        <textarea class='form-control' name='description' placeholder="Write a short description."><?php echo !empty($invoices)?$invoices['description']:"" ?></textarea>
                                     </div>
                                 </div>
                                 
                                   <div class="form-group">
                                     <div class="col-sm-10 col-md-offset-2 text-center">
                                       <button type='submit' class='btn btn-brand'>Save </button>
-                                      <a href='opp_purchases.php?id=<?php echo $_GET['id'] ?>' class='btn btn-default'>Cancel</a>
+                                      <a href='opp_invoices.php?id=<?php echo $_GET['id'] ?>' class='btn btn-default'>Cancel</a>
                                     </div>
                                   </div>
                               </form>
                             </div>
                             <br/>
 
-                  <h2>List of Purchase Orders</h2>
+                   <h2>List of Invoice Files</h2>
                    <br>
                     <table id='ResultTable' class='table table-bordered table-striped'>
                           <thead>
                             <tr>
                                                 <th class='text-center'>Document Name</th>
                                                 <th class='text-center'>Description</th>
+                                                <th class='text-right'>Amount</th>
                                                 <th class='text-center'>Date Uploaded</th>
                                                 <th class='text-center'>Date Modified</th>
                                                 <th class='text-center' style='min-width:30px'>Action</th>
@@ -194,6 +189,7 @@
                                                 <tr>
                                                     <td class='text-center'><?php echo htmlspecialchars($row['title']) ?></td>
                                                     <td class='text-center'><?php echo htmlspecialchars($row['description']) ?></td>
+                                                    <td class='text-right'><?php echo htmlspecialchars(number_format($row['amount'],2)) ?></td>
                                                     <td class='text-center'><?php echo htmlspecialchars($row['date_uploaded']) ?></td>
                                                     <td class='text-center'><?php echo htmlspecialchars($row['date_modified']) ?></td>
                                                     <!-- <td><?php echo htmlspecialchars($row['uname']) ?></td> -->
@@ -203,9 +199,9 @@
                                                             if($key=='id'):
                                                     ?>
                                                     <td align="center">
-                                                        <a href='opp_purchases.php?id=<?php echo $opp['id']?>&po_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
+                                                        <a href='opp_invoices.php?id=<?php echo $opp['id']?>&invoice_id=<?php echo $row['id']?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
                                                         
-                                                        <a href='delete.php?id=<?php echo $row['id']?>&t=opurchase&opp_id=<?php echo $opp['id']?>' class='btn btn-sm btn-danger' onclick='return confirm("This purchase order will be deleted.")'><span class='fa fa-trash'></span></a>
+                                                        <a href='delete.php?id=<?php echo $row['id']?>&t=oinvoice&opp_id=<?php echo $opp['id']?>' class='btn btn-sm btn-danger' onclick='return confirm("This invoice will be deleted.")'><span class='fa fa-trash'></span></a>
 
                                                         <a download='<?php echo $row['document'];?>' href='uploads/Files/<?php echo $row['document'] ?>'  class='btn btn-sm btn-default'><span class='fa fa-download'></span>
                                                     </td>
@@ -277,11 +273,10 @@
                 "scrollX": true
         });
     });
-
     
 </script>
 <?php 
-  if(!empty($purchases)):
+  if(!empty($invoices)):
     // var_dump("test");
     // die;
 ?>

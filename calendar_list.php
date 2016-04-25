@@ -26,7 +26,7 @@
         }
     }
 
-  $data=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,id FROM vw_calendar where activity_type<>5 and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+  $data=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,description,id FROM vw_calendar where activity_type<>5 and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
     makeHead("Calendar");
 
 ?>
@@ -79,13 +79,14 @@
                                                 <th class='text-center'>Related To</th>
                                                 <th class='text-center'>Start Date & Time</th>
                                                 <th class='text-center'>End Date</th>
+                                                <th class='text-center'>Description</th>
                                                 <th class='text-center' style='min-width:80px'>Action</th>
                             </tr>
                           </thead>
                           <tbody>
                                         <?php
                                             //Filter by date not less than date today
-                                            $calendars=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,id FROM vw_calendar where activity_type<>5 AND start_date>=NOW() and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
+                                            $calendars=$con->myQuery("SELECT event_stat,activity_type,subjects,is_related,start_date,end_date,description,id FROM vw_calendar where activity_type<>5 and is_deleted=0 AND start_date>=NOW() and assigned_to=?",array($_SESSION[WEBAPP]['user']['id']))->fetchAll(PDO::FETCH_ASSOC);
                                                 foreach ($calendars as $row):
                                             
                                         ?>
@@ -120,6 +121,7 @@
                                                                     $parameter_2.=$row['id'];
                                                                 ?>
                                                                 <a class='btn btn-sm btn-brand' href='<?php echo $parameter_2?>'><span class='fa fa-pencil'></span></a>
+
                                                                 <a class='btn btn-sm btn-danger' href='delete.php?id=<?php echo $value?>&t=eve' onclick='return confirm("This event will be deleted.")'><span class='fa fa-trash'></span></a>
                                                             </td>
                                                         <?php

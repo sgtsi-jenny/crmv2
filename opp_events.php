@@ -9,21 +9,6 @@
          redirect("index.php");
     }
     $tab="2";
-    // if(!empty($_GET['tab']) && !is_numeric($_GET['tab'])){
-    //     redirect("org_opp.php".(!empty($employee)?'?id='.$employee['id']:''));
-    //     die
-    // }
-    // else{
-    //     if(!empty($_GET['tab'])){
-    //         if($_GET['tab'] >0 && $_GET['tab']<=9){
-    //             $tab=$_GET['tab'];
-    //         }
-    //         else{
-    //             #invalid TAB
-    //             redirect("my_cal.php".(!empty($employee)?'?id='.$employee['id']:''));
-    //         }
-    //     }
-    // }
     if(empty($_GET['id'])){
         //Modal("No Account Selected");
         redirect("customers.php");
@@ -382,7 +367,7 @@
                                                         ?>
                                                         <a href='opp_events.php?id=<?php echo $opp['id']?><?php echo $parameter_2?>' class='btn btn-sm btn-brand'><span class='fa fa-pencil'></span></a>
 
-                                                        <a class='btn btn-sm btn-danger' href='delete_prod.php?id=<?php echo $row['id']?>&t=oprod&opp_id=<?php echo $opp['opp_id']?>' onclick='return confirm("This product will be deleted.")'><span class='fa fa-trash'></span></a>
+                                                        <a class='btn btn-sm btn-danger' href='delete.php?id=<?php echo $row['id'];?>&org_id=<?php echo $opp['id']?>&t=opp_eve' onclick='return confirm("This event will be deleted.")'><span class='fa fa-trash'></span></a>
                                                     </td>
                                                 </tr>
                                                 <?php

@@ -1,0 +1,3 @@
+SELECT ev.stat_id,ev.event_stat,ev.atype_id,ev.activity_type,ev.subjects,ev.due_date,DATE(ev.start_date) AS start_date,TIME(ev.start_date) AS start_time,DATE(ev.end_date) AS end_date,TIME(ev.start_date) AS end_time,ev.opp_name,ev.assigned_to,ev.id FROM vw_calendar ev 
+INNER JOIN opportunities ON ev.opp_id=opportunities.id INNER JOIN users ON ev.assigned_to=users.id 
+WHERE ev.is_deleted=0 AND ev.id=22

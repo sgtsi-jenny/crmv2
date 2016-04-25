@@ -76,7 +76,7 @@
 				// var_dump($inputs);
 				// die;
 
-				$con->myQuery("UPDATE events SET subject=:subject*,assigned_to=:assigned_to,start_date=:sdate,due_date=:due_date,event_stat=:status,activity_type=:activity_type,event_place=:event_place,priority=:priority,description=:description,date_modified=:date_modified,allDay=:allDay WHERE id=:id",$inputs);
+				$con->myQuery("UPDATE events SET subject=:subject,assigned_to=:assigned_to,start_date=:sdate,due_date=:due_date,event_stat=:status,activity_type=:activity_type,event_place=:event_place,priority=:priority,description=:description,date_modified=:date_modified,allDay=:allDay WHERE id=:id",$inputs);
 				Alert("Update successful","success");
 				redirect("calendar_list.php");
 			}

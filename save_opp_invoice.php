@@ -27,47 +27,48 @@
 
 			Alert("Please fill in the following fields: <br/>".$errors,"danger");
 			if(empty($inputs['id'])){
-				redirect("opp_quotes.php"."?id={$inputs['opp_id']}");
+				redirect("opp_invoices.php"."?id={$inputs['opp_id']}");
 			}
 			else{
-				redirect("opp_quotes.php"."?id={$inputs['opp_id']}");
+				redirect("opp_invoices.php"."?id={$inputs['opp_id']}");
 			}
 			die;
 		}
 		else{
 			//IF id exists update ELSE insert
-			if(empty($inputs['opp_quote'])){
+			if(empty($inputs['opp_invoice'])){
 				//Insert
 				$inputs=$_POST;
 				
 				//$inputs['name']=$_POST['name'];
-				$inputs['opp_id']=$inputs['quote_id'];
+				$inputs['opp_id']=$inputs['invoice_id'];
 				// var_dump($inputs['opp_id']);
 				// die;
-				unset($inputs['quote_id']);
-				unset($inputs['opp_quote']);
+				unset($inputs['invoice_id']);
+				unset($inputs['opp_invoice']);
 				date_default_timezone_set('Asia/Manila');
 				$now = new DateTime();
 				$inputs['date_modified']=$now->format('Y-m-d H:i:s a');
 				$inputs['date_uploaded']=$now->format('Y-m-d H:i:s a');
 				$userid=$_SESSION[WEBAPP]['user']['id'];
 				$inputs['user']=$userid;
-				$inputs['cat_id']=1;
+				$inputs['cat_id']=3;
 
-				$item=$_POST['opp_quote'];
-				$page="quotes";
-
+				$item=$_POST['opp_invoice'];
+				$page="invoices";
+				// var_dump($inputs);
+				// die;
 				$inputs['file_name']=$_FILES['file']['name'];
 				$filename=$file_id.getFileExtension($_FILES['file']['name']);
-				$file_id=$inputs['opp_id']. "_" . "Quotation" . "_" . (new \DateTime())->format('Y-m-d-H-i-s');
+				$file_id=$inputs['opp_id']. "_" . "Invoices" . "_" . (new \DateTime())->format('Y-m-d-H-i-s');
 				$name=$file_id.getFileExtension($_FILES['file']['name']);
 				move_uploaded_file($_FILES['file']['tmp_name'],"uploads/Files/".$inputs['file_name']);
 
 				// var_dump($inputs['file_name'])
 				// die;
 				unset($inputs['file']);
-				$con->myQuery("INSERT INTO files(title,description,document,user_id,date_uploaded,date_modified,opp_id,cat_id) VALUES (:title, :description,:file_name, :user, :date_uploaded, :date_modified, :opp_id, :cat_id)", $inputs);	
-				$notes="Uploaded quote."; 
+				$con->myQuery("INSERT INTO files(title,description,document,user_id,date_uploaded,date_modified,amount,opp_id,cat_id) VALUES (:title, :description,:file_name, :user, :date_uploaded, :date_modified,:amount, :opp_id, :cat_id)", $inputs);	
+				$notes="Uploaded invoice."; 
 				$con->myQuery("INSERT INTO activities(opp_id, user_id, notes, page, item, action_date) VALUES (:opp_id, '$userid', '$notes', '$page', '$item', NOW())", $inputs);
 				
 				$testing = error_reporting(E_ALL);
@@ -80,10 +81,10 @@
 				// die;
 				//Update
 				$inputs=$_POST;
-				$inputs['opp_id']=$inputs['quote_id'];
-				$item=$inputs['quote_id'];
-				$page="quotes";
-				unset($inputs['quote_id']);
+				$inputs['opp_id']=$inputs['invoice_id'];
+				$item=$inputs['invoice_id'];
+				$page="invoices";
+				unset($inputs['invoice_id']);
 				
 
 				date_default_timezone_set('Asia/Manila');
@@ -91,22 +92,28 @@
 				$inputs['date_modified']=$now->format('Y-m-d H:i:s a');
 				$userid=$_SESSION[WEBAPP]['user']['id'];
 				$inputs['user']=$userid;
-				
+				 // var_dump($inputs);
+				 // die;
 				if(0 == filesize($_FILES['file']['tmp_name'])){
-					$con->myQuery("UPDATE files SET title=:title,description=:description,user_id=:user,date_modified=:date_modified,opp_id=:opp_id WHERE id=:opp_quote",$inputs);
-					$notes="Updated quote details."; 
+					// var_dump("update details only");
+					// die;
+					unset($inputs['file']);
+					// var_dump($inputs);
+				 	// 	die;
+					$con->myQuery("UPDATE files SET title=:title,description=:description,user_id=:user,date_modified=:date_modified,amount=:amount,opp_id=:opp_id WHERE id=:opp_invoice",$inputs);
+					$notes="Updated invoice details."; 
 					$con->myQuery("INSERT INTO activities(opp_id, user_id, notes, page, item, action_date) VALUES (:opp_id, '$userid', '$notes', '$page', '$item', NOW())", $inputs);
 					
 					Alert("Update successful","success");
 				}
 				else{
-					//var_dump("update only");
+					// var_dump("update file only");
 					// die;
 					$inputs['file_name']=$_FILES['file']['name'];
 					// var_dump($inputs['file_name']);
 					// die;
 					$filename=$file_id.getFileExtension($_FILES['file']['name']);
-					$file_id=$inputs['opp_id']. "_" . "Quotation" . "_" . (new \DateTime())->format('Y-m-d-H-i-s');
+					$file_id=$inputs['opp_id']. "_" . "Invoice" . "_" . (new \DateTime())->format('Y-m-d-H-i-s');
 
 					// $name=$file_id.getFileExtension($_FILES['file']['name']);
 					move_uploaded_file($_FILES['file']['tmp_name'],"uploads/Files/".$inputs['file_name']);
@@ -114,8 +121,8 @@
 					// var_dump($inputs);
 					// die;
 
-					$con->myQuery("UPDATE files SET title=:title,description=:description,document=:file_name,user_id=:user,date_modified=:date_modified,opp_id=:opp_id WHERE id=:opp_quote",$inputs);
-					$notes="Updated quote file."; 
+					$con->myQuery("UPDATE files SET title=:title,description=:description,document=:file_name,user_id=:user,date_modified=:date_modified,amount=:amount,opp_id=:opp_id WHERE id=:opp_invoice",$inputs);
+					$notes="Updated invoice file."; 
 					$con->myQuery("INSERT INTO activities(opp_id, user_id, notes, action_date) VALUES ('$opp_id', '$userid', '$notes', NOW())", $inputs);
 					Alert("Update successful","success");
 				}
@@ -124,7 +131,7 @@
 			}
 
 			
-			redirect("opp_quotes.php"."?id={$inputs['opp_id']}");
+			redirect("opp_invoices.php"."?id={$inputs['opp_id']}");
 		}
 		die;
 	}
